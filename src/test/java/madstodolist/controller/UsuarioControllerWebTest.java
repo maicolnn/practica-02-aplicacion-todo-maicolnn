@@ -26,7 +26,8 @@ public class UsuarioControllerWebTest {
 
     @BeforeEach
     public void setup() {
-        // Registrar un usuario de prueba antes de cada test
+        usuarioService.deleteAll(); // <-- Añade esta línea para limpiar usuarios antes de cada test
+
         UsuarioData usuarioData = new UsuarioData();
         usuarioData.setEmail("usuario1@ua.es");
         usuarioData.setPassword("1234");
@@ -54,5 +55,18 @@ public class UsuarioControllerWebTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("ID")))
                 .andExpect(content().string(containsString("Correo electrónico")));
+    }
+
+    /**
+     * Test: La descripción del usuario muestra los datos correctos.
+     */
+    @Test
+    public void descripcionUsuarioMuestraDatos() throws Exception {
+        Long id = usuarioService.findByEmail("usuario1@ua.es").getId();
+        mockMvc.perform(get("/registrados/" + id))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("usuario1@ua.es")))
+                .andExpect(content().string(containsString("Usuario1")))
+                .andExpect(content().string(containsString("ID")));
     }
 }
