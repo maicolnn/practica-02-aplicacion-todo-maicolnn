@@ -10,13 +10,15 @@
             <tr>
                 <th>ID</th>
                 <th>Correo electrónico</th>
+                <th>Descripción del Usuario</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="u : ${usuarios}">
                 <td th:text="${u.id}"></td>
+                <td th:text="${u.email}"></td>
                 <td>
-                    <a th:href="@{/registrados/{id}(id=${u.id})}" th:text="${u.email}"></a>
+                    <a class="btn btn-info btn-sm" th:href="@{/registrados/{id}(id=${u.id})}">Detalles</a>
                 </td>
             </tr>
         </tbody>

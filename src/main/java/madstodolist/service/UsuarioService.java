@@ -2,6 +2,7 @@ package madstodolist.service;
 
 import madstodolist.dto.UsuarioData;
 import madstodolist.model.Usuario;
+import madstodolist.repository.TareaRepository;
 import madstodolist.repository.UsuarioRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -25,6 +26,8 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private TareaRepository tareaRepository;
 
     @Transactional(readOnly = true)
     public LoginStatus login(String eMail, String password) {
@@ -82,5 +85,11 @@ public class UsuarioService {
             usuariosData.add(modelMapper.map(usuario, UsuarioData.class));
         }
         return usuariosData;
+    }
+
+    @Transactional
+    public void deleteAll() {
+        tareaRepository.deleteAll();    // Borra primero las tareas
+        usuarioRepository.deleteAll();  // Luego los usuarios
     }
 }
