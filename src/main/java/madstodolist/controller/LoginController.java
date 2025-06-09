@@ -47,6 +47,11 @@ public class LoginController {
 
             managerUserSession.logearUsuario(usuario.getId());
 
+            // Redirigir a /registrados si es admin
+            if (usuario.getAdmin() != null && usuario.getAdmin()) {
+                return "redirect:/registrados";
+            }
+
             return "redirect:/usuarios/" + usuario.getId() + "/tareas";
         } else if (loginStatus == UsuarioService.LoginStatus.USER_NOT_FOUND) {
             model.addAttribute("error", "No existe usuario");
@@ -61,6 +66,8 @@ public class LoginController {
     @GetMapping("/registro")
     public String registroForm(Model model) {
         model.addAttribute("registroData", new RegistroData());
+        boolean adminExists = usuarioService.existeAdministrador();
+        model.addAttribute("adminExists", adminExists);
         return "formRegistro";
     }
 
@@ -82,6 +89,7 @@ public class LoginController {
         usuario.setPassword(registroData.getPassword());
         usuario.setFechaNacimiento(registroData.getFechaNacimiento());
         usuario.setNombre(registroData.getNombre());
+        usuario.setAdmin(registroData.getAdmin()); 
 
         usuarioService.registrar(usuario);
         return "redirect:/login";

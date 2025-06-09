@@ -63,7 +63,8 @@ public class UsuarioControllerWebTest {
     @Test
     public void descripcionUsuarioMuestraDatos() throws Exception {
         Long id = usuarioService.findByEmail("usuario1@ua.es").getId();
-        mockMvc.perform(get("/registrados/" + id))
+        mockMvc.perform(get("/registrados/" + id)
+                .sessionAttr("idUsuarioLogeado", id))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("usuario1@ua.es")))
                 .andExpect(content().string(containsString("Usuario1")))
