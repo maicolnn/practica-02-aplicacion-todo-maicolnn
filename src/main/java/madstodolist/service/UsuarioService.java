@@ -92,4 +92,9 @@ public class UsuarioService {
         tareaRepository.deleteAll();    // Borra primero las tareas
         usuarioRepository.deleteAll();  // Luego los usuarios
     }
+
+    @Transactional(readOnly = true)
+    public boolean existeAdministrador() {
+        return usuarioRepository.existsByAdminTrue();
+    }
 }

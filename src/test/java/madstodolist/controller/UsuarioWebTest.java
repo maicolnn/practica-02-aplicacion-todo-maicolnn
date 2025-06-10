@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -92,5 +93,40 @@ public class UsuarioWebTest {
                         .param("eMail","ana.garcia@gmail.com")
                         .param("password","000"))
                 .andExpect(content().string(containsString("Contraseña incorrecta")));
+    }
+
+        @Test
+    public void registroFormDeshabilitaCheckboxAdminSiYaExiste() throws Exception {
+        // GIVEN
+        when(usuarioService.existeAdministrador()).thenReturn(true);
+
+        // WHEN, THEN
+        mockMvc.perform(get("/registro"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("disabled")));
+    }
+
+    @Test
+    public void loginAdminRedirigeARegistrados() throws Exception {
+        // GIVEN
+        UsuarioData admin = new UsuarioData();
+        admin.setEmail("admin@ua.es");
+        admin.setPassword("adminpass");
+        admin.setNombre("Administrador");
+        admin.setAdmin(true);
+        when(usuarioService.registrar(admin)).thenReturn(admin);
+
+        when(usuarioService.existeAdministrador()).thenReturn(true);
+        when(usuarioService.login("admin@ua.es", "adminpass"))
+                .thenReturn(UsuarioService.LoginStatus.LOGIN_OK);
+        when(usuarioService.findByEmail("admin@ua.es"))
+                .thenReturn(admin);
+
+        // WHEN, THEN
+        mockMvc.perform(post("/login")
+                .param("eMail", "admin@ua.es")
+                .param("password", "adminpass"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/registrados"));
     }
 }

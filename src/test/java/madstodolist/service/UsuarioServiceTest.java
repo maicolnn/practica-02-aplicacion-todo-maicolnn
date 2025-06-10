@@ -153,4 +153,37 @@ public class UsuarioServiceTest {
         assertThat(usuario.getEmail()).isEqualTo("user@ua");
         assertThat(usuario.getNombre()).isEqualTo("Usuario Ejemplo");
     }
+
+    @Test
+    public void registrarUsuarioComoAdministrador() {
+        // WHEN
+        UsuarioData usuario = new UsuarioData();
+        usuario.setEmail("admin@ua.es");
+        usuario.setPassword("adminpass");
+        usuario.setNombre("Administrador");
+        usuario.setAdmin(true);
+
+        usuarioService.registrar(usuario);
+
+        // THEN
+        UsuarioData usuarioBD = usuarioService.findByEmail("admin@ua.es");
+        assertThat(usuarioBD.getAdmin()).isTrue();
+    }
+
+    @Test
+    public void noPermitirMasDeUnAdministrador() {
+        // GIVEN
+        UsuarioData admin = new UsuarioData();
+        admin.setEmail("admin@ua.es");
+        admin.setPassword("adminpass");
+        admin.setNombre("Administrador");
+        admin.setAdmin(true);
+        usuarioService.registrar(admin);
+
+        // WHEN
+        boolean existeAdmin = usuarioService.existeAdministrador();
+
+        // THEN
+        assertThat(existeAdmin).isTrue();
+    }
 }

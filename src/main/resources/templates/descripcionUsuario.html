@@ -8,19 +8,23 @@
     <table class="table table-bordered">
         <tr>
             <th>ID</th>
-            <td th:text="${usuario.id}"></td>
+            <td th:text="${usuarioDescripcion.id}"></td>
         </tr>
         <tr>
             <th>Correo electrónico</th>
-            <td th:text="${usuario.email}"></td>
+            <td th:text="${usuarioDescripcion.email}"></td>
         </tr>
         <tr>
             <th>Nombre</th>
-            <td th:text="${usuario.nombre}"></td>
+            <td th:text="${usuarioDescripcion.nombre}"></td>
         </tr>
         <tr>
             <th>Fecha de nacimiento</th>
-            <td th:text="${#dates.format(usuario.fechaNacimiento, 'dd-MM-yyyy')}" />
+            <td th:text="${#dates.format(usuarioDescripcion.fechaNacimiento, 'dd-MM-yyyy')}" />
+        </tr>
+        <tr>
+            <th>Rol</th>
+            <td th:text="${usuarioDescripcion.admin} ? 'Administrador' : 'Usuario estándar'"></td>
         </tr>
     </table>
     <a class="btn btn-primary" href="/registrados">Volver al listado</a>
