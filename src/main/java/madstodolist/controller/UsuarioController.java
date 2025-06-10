@@ -33,7 +33,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/registrados/{id}")
-    public String descripcionUsuario(@PathVariable Long id, Model model, HttpSession session) {
+    public String descripcionUsuarioDetalle(@PathVariable Long id, Model model, HttpSession session) {
         UsuarioData usuarioDescripcion = usuarioService.findById(id);
         if (usuarioDescripcion == null) {
             return "redirect:/registrados";
